@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win nsis",
+    "dist": "npm run pack:engine && electron-builder --win nsis",
     "pack:engine": "node scripts/build-engine.js"
   },
   "dependencies": {
@@ -16,36 +16,17 @@
     "semver": "^7.8.5"
   },
   "devDependencies": {
-    "archiver": "^7.0.1",
     "electron": "37.10.3",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "archiver": "^7.0.1"
   },
   "build": {
     "appId": "com.deepseek.harness.desktop",
     "productName": "DSH Desktop",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "main.js",
-      "lib/**/*",
-      "splash.html",
-      "icon.png",
-      "icon.ico",
-      "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "engine",
-        "to": "engine"
-      }
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ],
-      "icon": "icon.ico"
-    },
+    "directories": { "output": "dist" },
+    "files": ["main.js", "lib/**/*", "splash.html", "icon.png", "icon.ico", "package.json"],
+    "extraResources": [{ "from": "release/dsh-engine.zip", "to": "dsh-engine.zip" }],
+    "win": { "target": ["nsis"], "icon": "icon.ico" },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
@@ -53,12 +34,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "nanbbb",
-        "repo": "dsh-desktop"
-      }
-    ]
+    "publish": [{ "provider": "github", "owner": "nanbbb", "repo": "dsh-desktop" }]
   }
 }

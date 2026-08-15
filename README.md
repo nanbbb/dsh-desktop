@@ -1,59 +1,53 @@
-# DeepSeek Harness 桌面端
+# DeepSeek Harness 桌面端（DSH Desktop）
 
-把 `dsh web` 包成一个原生窗口应用：双击图标即用，无需每次敲命令、也无需留着终端窗口。
+自包含的 Windows 桌面应用：把 `dsh web` 完整打包，双击即用，无需 Node/npm/命令行。
 
-## 快速开始
-
-桌面上的 **「DeepSeek Harness」** 快捷方式双击即可打开。
-
-等价的手动启动方式（在项目目录下）：
+## 架构
 
 ```
-npm start
+DSH Desktop.exe (Electron 壳)   —— 窗口 / 托盘 / 生命周期
+  └─ 内置 Node (ELECTRON_RUN_AS_NODE) 运行引擎
+engine/  —— 自包含引擎（dsh 包 + web 插件 + profile）
+  node_modules/@deepseek-ai/dsh   核心 + 全部 bundle
+  plugins/                        dsh-browser / dsh-mneme / modlens / find-plugin
+  profile/                        cordis.yml / package.json 等配置
 ```
 
-## 它做了什么
+用户数据（会话/设置/凭据/记忆）在 `%APPDATA%/DSH Desktop/home`，首次运行自动从旧 `~/.dsh` 迁移。
 
-1. 启动时先探测 `127.0.0.1:3080` 是否已有 DSH 服务在跑：
-   - 有 → 直接复用（比如你之前已经用 `dsh web` 打开过）。
-   - 没有 → 自动在后台启动 `dsh web`，等服务就绪后再加载页面。
-2. 用一个原生窗口打开界面；启动期间先显示加载页。
-3. 点窗口「关闭」按钮 = 缩到系统托盘（右下角图标），服务保持运行；再次双击图标或点托盘「显示 DSH」即可秒开。
-4. 托盘菜单「退出」= 真正结束；**只有本应用自动启动的服务会被一并回收**，你自己手动起的服务不受影响。
+## 双通道自动更新
 
-## 配置
+| 通道 | 内容 | 机制 |
+| --- | --- | --- |
+| 壳 | Electron 主进程 | electron-updater + NSIS，启动后台检查，退出时自动装 |
+| 引擎 | dsh 核心 + 插件 | 启动前检查 GitHub Release 的 `dsh-engine-<版本>.zip`，下载替换（带回滚） |
 
-默认 host/port 可通过环境变量覆盖：
+更新源：GitHub Releases（`nanbbb/dsh-desktop`）。
 
-| 变量 | 默认值 |
-| --- | --- |
-| `DSH_WEB_HOST` | `127.0.0.1` |
-| `DSH_WEB_PORT` | `3080` |
-
-## 日志
-
-应用自动启动的服务日志在：
+## 构建
 
 ```
-%APPDATA%\dsh-desktop\dsh-web.log
+node scripts/fetch-engine.js   # 从本机现有安装抓取引擎（dsh + 插件）
+npm run pack:engine            # 打引擎 zip 到 dist/
+npm run dist                   # 打 NSIS 安装包到 dist/
 ```
 
-## 文件说明
+## 发布
 
-| 文件 | 说明 |
-| --- | --- |
-| `main.js` | Electron 主进程：探测/启动服务、窗口、托盘、生命周期 |
-| `splash.html` | 启动加载页 |
-| `icon.png` / `icon.ico` | 应用图标（`scripts/make-icon.js` 生成） |
-| `package.json` | 依赖（electron 37.10.3） |
-
-重新生成图标：
+1. 改 `package.json` 版本号（壳）+ `engine/package.json` 版本号（引擎，仅引擎变化时改）。
+2. `npm run dist && npm run pack:engine`。
+3. 上传：
 
 ```
-node scripts/make-icon.js
+cd dist
+Copy-Item "DSH Desktop Setup 0.1.0.exe" "DSH-Desktop-Setup-0.1.0.exe" -Force
+gh release create v<版本> DSH-Desktop-Setup-<版本>.exe dsh-engine-<引擎版本>.zip latest.yml --repo nanbbb/dsh-desktop
 ```
 
-## 说明
+注意：`latest.yml` 里的文件名是连字符形式（electron-builder 会把空格转连字符）。
 
-- 当前是「开发运行」形态：快捷方式直接指向 `node_modules/electron/dist/electron.exe`。若移动项目目录需重新指向快捷方式。
-- 如需打包成独立 `.exe`（可分发、带安装包），可以后续用 electron-builder 打一个发布版。
+## 开发运行
+
+```
+npm start   # 开发模式：直接用项目里的 engine/ 运行
+```

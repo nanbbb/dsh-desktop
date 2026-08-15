@@ -95,6 +95,16 @@ function withTimeout(promise, ms) {
 }
 
 async function boot() {
+  // 首次运行：解压捆绑引擎
+  try {
+    await engine.ensureEngine(app);
+  } catch (err) {
+    dialog.showErrorBox(APP_NAME, '引擎初始化失败：\n' + (err && err.message ? err.message : String(err)));
+    isQuitting = true;
+    app.quit();
+    return;
+  }
+
   // 引擎更新：在启动引擎前检查并替换（超时/失败不阻塞启动）
   const upd = await withTimeout(updater.checkEngineUpdate(), 12000);
   if (upd.timedOut) console.log('[dsh-desktop] 引擎更新检查超时，跳过');

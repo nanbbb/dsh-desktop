@@ -1,5 +1,6 @@
 node_modules/
 dist/
+release/
 engine/node_modules/
 engine/plugins/
 engine/test-home/
