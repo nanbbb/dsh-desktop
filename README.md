@@ -6,6 +6,15 @@
 
 > 本项目是 DeepSeek Harness 的第三方桌面端，与 DeepSeek 官方无关。
 
+## 下载
+
+**Windows x64**，约 281 MB：
+
+- [⬇️ 下载安装包（DSH-Desktop-Setup-0.1.0.exe）](https://github.com/nanbbb/dsh-desktop/releases/download/v0.1.0/DSH-Desktop-Setup-0.1.0.exe)
+- 或到 [Releases 页面](https://github.com/nanbbb/dsh-desktop/releases/latest) 选版本
+
+双击安装即可，无需 Node/npm。首次运行若弹 SmartScreen，点「更多信息 → 仍要运行」。
+
 ## 架构
 
 ```
