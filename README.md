@@ -6,61 +6,40 @@
 
 > 本项目是 DeepSeek Harness 的第三方桌面端，与 DeepSeek 官方无关。
 
+## 内置功能
+
+- **dsh-plus 插件**（内置）：设置面板接管 **视觉(modlens) / 记忆(mneme)** 配置、**插件市场**（搜索/一键安装）、**本地模型**（探测 ollama/LM Studio 一键添加）、一键重启引擎。
+- **双通道自动更新**：壳 + 引擎分开更新，检查更新有进度提示（正在检查 / 发现新版本 / 下载中 X% / 已是最新）。
+- **免环境依赖**：引擎自包含，新 PC 无需 Node/npm/dsh。
+
 ## 下载
 
 **Windows x64**，约 281 MB：
 
-- [⬇️ 下载安装包（DSH-Desktop-Setup-0.1.0.exe）](https://github.com/nanbbb/dsh-desktop/releases/download/v0.1.0/DSH-Desktop-Setup-0.1.0.exe)
-- 或到 [Releases 页面](https://github.com/nanbbb/dsh-desktop/releases/latest) 选版本
+- [⬇️ 下载最新安装包](https://github.com/nanbbb/dsh-desktop/releases/latest)
+- 或到 [Releases 页面](https://github.com/nanbbb/dsh-desktop/releases) 选版本
 
 双击安装即可，无需 Node/npm。首次运行若弹 SmartScreen，点「更多信息 → 仍要运行」。
 
 ## 架构
 
 ```
-DSH Desktop.exe (Electron 壳)   —— 窗口 / 托盘 / 生命周期
+DSH Desktop.exe (Electron 壳)   —— 窗口 / 托盘 / 生命周期 / 引擎自动重启
   └─ 内置 Node (ELECTRON_RUN_AS_NODE) 运行引擎
-engine/  —— 自包含引擎（dsh 包 + web 插件 + profile）
-  node_modules/@deepseek-ai/dsh   核心 + 全部 bundle
-  plugins/                        dsh-browser / dsh-mneme / modlens / find-plugin
-  profile/                        cordis.yml / package.json 等配置
+engine/  —— 自包含引擎（dsh 包 + web 插件 + dsh-plus + profile）
 ```
 
-用户数据（会话/设置/凭据/记忆）在 `%APPDATA%/DSH Desktop/home`，首次运行自动从旧 `~/.dsh` 迁移。
+用户数据（会话/设置/凭据/记忆）在 `%APPDATA%/dsh-desktop/home`，首次运行自动从旧 `~/.dsh` 迁移；卸载重装不丢数据。
 
-## 双通道自动更新
-
-| 通道 | 内容 | 机制 |
-| --- | --- | --- |
-| 壳 | Electron 主进程 | electron-updater + NSIS，启动后台检查，退出时自动装 |
-| 引擎 | dsh 核心 + 插件 | 启动前检查 GitHub Release 的 `dsh-engine-<版本>.zip`，下载替换（带回滚） |
-
-更新源：GitHub Releases（`nanbbb/dsh-desktop`）。
-
-## 构建
+## 构建 & 发布
 
 ```
-node scripts/fetch-engine.js   # 从本机现有安装抓取引擎（dsh + 插件）
-npm run pack:engine            # 打引擎 zip 到 dist/
-npm run dist                   # 打 NSIS 安装包到 dist/
+node scripts/fetch-engine.js   # 从本机现有安装抓取引擎（dsh + 插件 + dsh-plus）
+npm run dist                   # 打引擎 zip + NSIS 安装包到 dist/
 ```
 
-## 发布
+发布：改版本号 → `npm run dist` → `gh release create v<版本> DSH-Desktop-Setup-<版本>.exe dsh-engine-<引擎版本>.zip latest.yml`。
 
-1. 改 `package.json` 版本号（壳）+ `engine/package.json` 版本号（引擎，仅引擎变化时改）。
-2. `npm run dist && npm run pack:engine`。
-3. 上传：
+## License
 
-```
-cd dist
-Copy-Item "DSH Desktop Setup 0.1.0.exe" "DSH-Desktop-Setup-0.1.0.exe" -Force
-gh release create v<版本> DSH-Desktop-Setup-<版本>.exe dsh-engine-<引擎版本>.zip latest.yml --repo nanbbb/dsh-desktop
-```
-
-注意：`latest.yml` 里的文件名是连字符形式（electron-builder 会把空格转连字符）。
-
-## 开发运行
-
-```
-npm start   # 开发模式：直接用项目里的 engine/ 运行
-```
+MIT
