@@ -1,6 +1,10 @@
-# DeepSeek Harness 桌面端（DSH Desktop）
+# DeepSeek Harness 的桌面端
+
+> 双击即用，不用敲命令
 
 自包含的 Windows 桌面应用：把 `dsh web` 完整打包，双击即用，无需 Node/npm/命令行。
+
+> 本项目是 DeepSeek Harness 的第三方桌面端，与 DeepSeek 官方无关。
 
 ## 架构
 
