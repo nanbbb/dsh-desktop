@@ -1,0 +1,8 @@
+node_modules/
+dist/
+engine/node_modules/
+engine/plugins/
+engine/test-home/
+engine/.old/
+*.log
+.DS_Store

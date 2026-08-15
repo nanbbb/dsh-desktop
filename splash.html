@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>DeepSeek Harness</title>
+<style>
+  :root { color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px;
+    background: radial-gradient(1200px 700px at 50% -10%, #1a2036, #0b0d12);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    color: #e6e8ee;
+    user-select: none;
+  }
+  .logo {
+    width: 72px; height: 72px; border-radius: 18px;
+    background: linear-gradient(135deg, #5b7cfa, #2f4fd8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; font-weight: 700; color: #fff;
+    box-shadow: 0 10px 40px rgba(79, 112, 245, .45);
+  }
+  h1 { font-size: 20px; font-weight: 600; letter-spacing: .5px; }
+  .spinner {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.15); border-top-color: #5b7cfa;
+    animation: spin .8s linear infinite;
+  }
+  p { font-size: 13px; color: #9aa1b2; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="logo">&gt;_</div>
+  <h1>DeepSeek Harness</h1>
+  <div class="spinner"></div>
+  <p>正在启动 DSH 服务…</p>
+</body>
+</html>

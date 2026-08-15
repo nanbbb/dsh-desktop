@@ -1,0 +1,64 @@
+{
+  "name": "dsh-desktop",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness 桌面端（自包含 + 双通道自动更新）",
+  "author": "nanbbb",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "pack:engine": "node scripts/build-engine.js"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2",
+    "extract-zip": "^2.0.1",
+    "semver": "^7.8.5"
+  },
+  "devDependencies": {
+    "archiver": "^7.0.1",
+    "electron": "37.10.3",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.deepseek.harness.desktop",
+    "productName": "DSH Desktop",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "lib/**/*",
+      "splash.html",
+      "icon.png",
+      "icon.ico",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "engine",
+        "to": "engine"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "nanbbb",
+        "repo": "dsh-desktop"
+      }
+    ]
+  }
+}

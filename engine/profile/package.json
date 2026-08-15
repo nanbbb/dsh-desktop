@@ -1,0 +1,22 @@
+{
+  "name": "dsh-profile-web",
+  "private": true,
+  "dependencies": {
+    "@liustack/modlens": "^3.16.6",
+    "@modusensus/dsh-mneme": "^0.2.5",
+    "dsh-browser": "^0.1.0",
+    "dsh-find-plugin": "^0.3.6"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "@liustack/modlens",
+        "dsh-browser",
+        "dsh-find-plugin",
+        "@modusensus/dsh-mneme"
+      ]
+    }
+  }
+}
