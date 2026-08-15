@@ -1,6 +1,6 @@
 {
   "name": "dsh-desktop",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "DeepSeek Harness 桌面端（自包含 + 双通道自动更新）",
   "author": "nanbbb",
   "main": "main.js",

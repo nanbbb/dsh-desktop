@@ -176,7 +176,7 @@ async function boot() {
 }
 
 function checkUpdates(manual) {
-  updater.checkShellUpdate(manual);
+  updater.checkShellUpdate(manual, { mainWindow: mainWindow, tray: tray });
 }
 
 const gotLock = app.requestSingleInstanceLock();
