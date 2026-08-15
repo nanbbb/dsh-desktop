@@ -15,7 +15,8 @@
         "@liustack/modlens",
         "dsh-browser",
         "dsh-find-plugin",
-        "@modusensus/dsh-mneme"
+        "@modusensus/dsh-mneme",
+        "dsh-plus"
       ]
     }
   }

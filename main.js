@@ -94,6 +94,30 @@ function withTimeout(promise, ms) {
   });
 }
 
+// 启动引擎，并挂载「退出后自动重启 + 就绪后刷新窗口」的钩子
+function spawnEngineWithRestart() {
+  const cfg = engine.getConfig();
+  const proc = engine.startEngine(app, { host: cfg.host, port: cfg.port, logStream: logStream });
+  proc.on('exit', function (code, signal) {
+    console.log('[dsh-desktop] 引擎退出 code=' + code + ' signal=' + signal);
+    if (serverProc === proc) { serverProc = null; spawnedByUs = false; }
+    if (isQuitting) return;
+    console.log('[dsh-desktop] 2 秒后自动重启引擎…');
+    setTimeout(function () {
+      if (isQuitting) return;
+      serverProc = spawnEngineWithRestart();
+      spawnedByUs = true;
+      engine.waitForServer(cfg.host, cfg.port, 45000).then(function (ok) {
+        if (ok && mainWindow && !mainWindow.isDestroyed()) {
+          console.log('[dsh-desktop] 引擎已重启，刷新窗口');
+          mainWindow.reload();
+        }
+      });
+    }, 2000);
+  });
+  return proc;
+}
+
 async function boot() {
   // 首次运行：解压捆绑引擎
   try {
@@ -129,13 +153,8 @@ async function boot() {
     spawnedByUs = false;
     console.log('[dsh-desktop] 复用已有服务 ' + engine.serverUrl());
   } else {
-    serverProc = engine.startEngine(app, { host: cfg.host, port: cfg.port, logStream: logStream });
+    serverProc = spawnEngineWithRestart();
     spawnedByUs = true;
-    serverProc.on('exit', function (code, signal) {
-      console.log('[dsh-desktop] 引擎退出 code=' + code + ' signal=' + signal);
-      serverProc = null;
-      spawnedByUs = false;
-    });
     const ok = await engine.waitForServer(cfg.host, cfg.port, 45000);
     if (!ok) {
       dialog.showErrorBox(APP_NAME, '无法启动 DSH 服务（' + engine.serverUrl() + '）。\n\n日志：' + logPath);
