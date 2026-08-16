@@ -21,6 +21,9 @@ function cp(src, dst) {
 // 1) dsh 包
 cp(dshSrc, path.join(engineDir, 'node_modules', '@deepseek-ai', 'dsh'));
 
+// 1.5) browse 目录选择器加盘符列表
+require('./patch-browse-picker').patchBrowsePicker(engineDir);
+
 // 2) 插件：展开链接 + 剔除 pnpm 元数据
 cp(path.join(profileWeb, 'node_modules'), path.join(engineDir, 'plugins'));
 for (const junk of ['.modules.yaml', '.pnpm', '.pnpm-workspace-state-v1.json', '.cache']) {
