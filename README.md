@@ -14,10 +14,20 @@
 
 ## 下载
 
-**Windows x64**，约 281 MB：
+**Windows x64**，约 281 MB。
+
+### 方式一：夸克网盘（国内推荐，速度快）
+
+📱 手机扫码（提取码已内置），或复制链接打开「夸克APP」：
+
+![下载二维码](download-qr.png)
+
+- 链接：<https://pan.quark.cn/s/35cde8c8c64b?pwd=eehh>
+- 提取码：`eehh`
+
+### 方式二：GitHub Releases
 
 - [⬇️ 下载最新安装包](https://github.com/nanbbb/dsh-desktop/releases/latest)
-- 或到 [Releases 页面](https://github.com/nanbbb/dsh-desktop/releases) 选版本
 
 双击安装即可，无需 Node/npm。首次运行若弹 SmartScreen，点「更多信息 → 仍要运行」。
 
